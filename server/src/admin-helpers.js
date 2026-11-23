@@ -143,8 +143,14 @@ function buildUpdate(values, columnMap = {}) {
   return { sets, params: keys.map((key) => values[key]) }
 }
 
+function maskOpenid(openid) {
+  if (!openid) return ''
+  return openid.length <= 8 ? openid.slice(0, 2) + '***' : openid.slice(0, 4) + '***' + openid.slice(-4)
+}
+
 module.exports = {
   badRequest,
+  maskOpenid,
   parsePagination,
   activityDto,
   pointDto,
