@@ -22,10 +22,17 @@ seed(db)
 
 let server
 let baseUrl
+let guestToken = ''
+let guestVisitorId = ''
 
 function request(url, options = {}) {
   return fetch(baseUrl + url, {
-    headers: { 'Content-Type': 'application/json', 'X-Visitor-Id': options.visitorId || 'bind_visitor', ...(options.headers || {}) },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Visitor-Id': options.visitorId || 'bind_visitor',
+      ...(guestToken ? { 'X-Guest-Token': guestToken } : {}),
+      ...(options.headers || {})
+    },
     ...options
   }).then(async (res) => ({ status: res.status, body: await res.json() }))
 }
@@ -35,6 +42,9 @@ test.before(async () => {
     const instance = createApp().listen(0, () => resolve(instance))
   })
   baseUrl = 'http://127.0.0.1:' + server.address().port + '/api'
+  const guest = await request('/auth/guest', { method: 'POST' })
+  guestToken = guest.body.data.token
+  guestVisitorId = guest.body.data.visitorId
 
   const now = Date.now()
   db.prepare(`INSERT INTO activities (id, name, status, created_at, updated_at) VALUES (?, ?, 'active', ?, ?)`)
@@ -221,7 +231,7 @@ test('原有功能回归：演示 UID、打卡持久化、后台 501', async () 
     body: JSON.stringify({ spotId: 'spot_city_gate', uid: 'DEMO_UID_0001' })
   })
   assert.equal(duplicate.body.data.stats.checked, 1)
-  assert.equal(getDb().prepare('SELECT COUNT(*) AS c FROM checkin_records WHERE visitor_id=?').get('regression_visitor').c, 1)
+  assert.equal(getDb().prepare('SELECT COUNT(*) AS c FROM checkin_records WHERE visitor_id=?').get(guestVisitorId).c, 1)
 
   const health = await request('/health')
   assert.equal(health.body.data.status, 'up')

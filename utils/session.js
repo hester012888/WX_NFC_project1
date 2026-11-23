@@ -11,6 +11,10 @@ function getVisitorId() {
   return id
 }
 
+function setVisitorId(id) {
+  wx.setStorageSync(VISITOR_KEY, id)
+}
+
 function getCheckins() {
   const list = wx.getStorageSync(CHECKIN_KEY)
   return Array.isArray(list) ? list : []
@@ -29,4 +33,4 @@ function clearCheckins() {
   wx.removeStorageSync(CHECKIN_KEY)
 }
 
-module.exports = { getVisitorId, getCheckins, addCheckin, clearCheckins }
+module.exports = { getVisitorId, setVisitorId, getCheckins, addCheckin, clearCheckins }

@@ -2,8 +2,10 @@
 const express = require('express')
 const repository = require('../repository')
 const { normalizeUid } = require('../uid')
+const { requireTrustedSource } = require('../trusted-source')
 
 const router = express.Router()
+router.use(requireTrustedSource)
 const ok = (res, data) => res.json({ code: 0, message: 'ok', data })
 const fail = (res, message, status = 400) => res.status(status).json({ code: status, message })
 

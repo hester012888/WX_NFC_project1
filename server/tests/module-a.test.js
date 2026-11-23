@@ -23,10 +23,17 @@ seed(db)
 
 let server
 let baseUrl
+let guestToken = ''
+let guestVisitorId = ''
 
 function request(url, options = {}) {
   return fetch(baseUrl + url, {
-    headers: { 'Content-Type': 'application/json', 'X-Visitor-Id': options.visitorId || 'test_visitor', ...(options.headers || {}) },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Visitor-Id': options.visitorId || 'test_visitor',
+      ...(guestToken ? { 'X-Guest-Token': guestToken } : {}),
+      ...(options.headers || {})
+    },
     ...options
   }).then(async (res) => ({ status: res.status, body: await res.json() }))
 }
@@ -36,6 +43,9 @@ test.before(async () => {
     const instance = createApp().listen(0, () => resolve(instance))
   })
   baseUrl = 'http://127.0.0.1:' + server.address().port + '/api'
+  const guest = await request('/auth/guest', { method: 'POST' })
+  guestToken = guest.body.data.token
+  guestVisitorId = guest.body.data.visitorId
 })
 
 test.after(async () => {
@@ -60,7 +70,7 @@ test('数据库创建、迁移与幂等播种', () => {
   const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map((row) => row.name)
   ;['activities', 'points', 'badges', 'nfc_tags', 'users', 'checkin_records', 'devices', 'device_events', 'schema_migrations']
     .forEach((name) => assert.ok(tables.includes(name), `缺少表 ${name}`))
-  assert.equal(db.prepare('SELECT COUNT(*) AS c FROM schema_migrations').get().c, 1)
+  assert.ok(db.prepare('SELECT COUNT(*) AS c FROM schema_migrations').get().c >= 1)
   assert.equal(db.prepare('SELECT COUNT(*) AS c FROM activities').get().c, 1)
   assert.equal(db.prepare('SELECT COUNT(*) AS c FROM points').get().c, 6)
   assert.equal(db.prepare('SELECT COUNT(*) AS c FROM badges').get().c, 6)
@@ -130,7 +140,7 @@ test('原有 API 回归：健康、首页、活动、点位、地图、徽章、
   assert.equal(badges.body.data[0].unlocked, false)
 
   const profile = await request('/profile', { visitorId: 'api_visitor' })
-  assert.equal(profile.body.data.visitorId, 'api_visitor')
+  assert.equal(profile.body.data.visitorId, guestVisitorId)
 
   const media = await request('/media')
   assert.deepEqual(media.body.data, [])

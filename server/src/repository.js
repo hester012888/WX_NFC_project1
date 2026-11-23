@@ -56,7 +56,9 @@ function rowToBadge(row) {
 }
 
 function getVisitorId(req) {
-  return (req.headers['x-visitor-id'] || 'anonymous').toString()
+  // 身份只来自已验证令牌解析出的 req.identity；X-Visitor-Id 请求头不再作为凭证。
+  if (req && req.identity && req.identity.visitorId) return req.identity.visitorId
+  return 'anonymous'
 }
 
 function getActivity() {
@@ -99,6 +101,13 @@ function addCheckin(visitorId, { spotId, uid = '', time = Date.now() }) {
   const db = getDb()
   return db.transaction(() => {
     ensureUser(db, visitorId)
+    const user = db.prepare('SELECT status, merged_into FROM users WHERE visitor_id = ?').get(visitorId)
+    if (!user || user.status !== 'active' || user.merged_into) {
+      const error = new Error('游客身份不可打卡')
+      error.status = 401
+      error.code = 'IDENTITY_INVALID'
+      throw error
+    }
     const existing = db.prepare(`
       SELECT point_id AS spotId, uid, client_time AS time
       FROM checkin_records

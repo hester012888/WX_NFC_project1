@@ -50,6 +50,14 @@ router.get('/badges', (req, res) => {
 })
 
 router.get('/profile', (req, res) => {
+  if (!req.identity || req.identity.type === 'anonymous') {
+    return ok(res, {
+      visitorId: '',
+      activity: repository.getActivity(),
+      stats: repository.statsFor('__anonymous__'),
+      checkins: []
+    })
+  }
   const visitorId = repository.getVisitorId(req)
   const checkins = repository.getCheckins(visitorId).map((item) => {
     const spot = repository.getPointById(item.spotId)
@@ -64,6 +72,9 @@ router.get('/profile', (req, res) => {
 })
 
 router.post('/checkins', (req, res) => {
+  if (!req.identity || req.identity.type === 'anonymous') {
+    return fail(res, '请先获取游客凭证或登录', 401)
+  }
   const { spotId, uid = '' } = req.body || {}
   if (!spotId || !repository.getPointRecord(spotId)) {
     return fail(res, '无效的点位 ID')
