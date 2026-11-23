@@ -1,0 +1,151 @@
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-top: 1rpx solid #e7eef0;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -8rpx 30rpx rgba(18, 67, 74, 0.06);
+}
+
+.tabbar-inner {
+  height: 108rpx;
+  display: flex;
+  align-items: stretch;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #84969d;
+}
+
+.tab-hover {
+  opacity: 0.7;
+}
+
+.tab-item.is-active {
+  color: #0c8c86;
+}
+
+.tab-text {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  line-height: 1.2;
+}
+
+.tab-item.is-active .tab-text {
+  font-weight: 600;
+}
+
+.tab-icon {
+  position: relative;
+  width: 36rpx;
+  height: 34rpx;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.tab-item.is-active .tab-icon {
+  transform: translateY(-2rpx) scale(1.06);
+}
+
+/* 首页：房屋 */
+.icon-home {
+  width: 32rpx;
+  height: 22rpx;
+  margin-top: 10rpx;
+  border: 3rpx solid currentColor;
+  border-top: 0;
+  border-radius: 0 0 6rpx 6rpx;
+}
+
+.icon-home::before {
+  content: "";
+  position: absolute;
+  left: -5rpx;
+  top: -12rpx;
+  width: 0;
+  height: 0;
+  border-left: 19rpx solid transparent;
+  border-right: 19rpx solid transparent;
+  border-bottom: 14rpx solid currentColor;
+}
+
+/* 地图：指南针 */
+.icon-map {
+  width: 32rpx;
+  height: 32rpx;
+  border: 3rpx solid currentColor;
+  border-radius: 50%;
+}
+
+.icon-map::before {
+  content: "";
+  position: absolute;
+  left: 10rpx;
+  top: 2rpx;
+  width: 0;
+  height: 0;
+  border-left: 6rpx solid transparent;
+  border-right: 6rpx solid transparent;
+  border-bottom: 13rpx solid currentColor;
+}
+
+/* 徽章：勋章 */
+.icon-badge {
+  width: 30rpx;
+  height: 30rpx;
+  border: 3rpx solid currentColor;
+  border-radius: 50%;
+}
+
+.icon-badge::before,
+.icon-badge::after {
+  content: "";
+  position: absolute;
+  top: 22rpx;
+  width: 0;
+  height: 0;
+  border-left: 8rpx solid transparent;
+  border-right: 8rpx solid transparent;
+  border-top: 14rpx solid currentColor;
+}
+
+.icon-badge::before {
+  left: 0;
+  transform: rotate(-16deg);
+}
+
+.icon-badge::after {
+  right: 0;
+  transform: rotate(16deg);
+}
+
+/* 我的：用户 */
+.icon-user::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10rpx;
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.icon-user::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 3rpx;
+  width: 28rpx;
+  height: 15rpx;
+  border-radius: 16rpx 16rpx 4rpx 4rpx;
+  background: currentColor;
+}

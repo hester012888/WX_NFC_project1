@@ -1,0 +1,12 @@
+server/node_modules/
+server/.env
+server/.env.*
+!server/.env.example
+server/data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+._*
+.DS_Store
+project.private.config.json

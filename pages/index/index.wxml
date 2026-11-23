@@ -1,0 +1,76 @@
+<view class="page">
+  <view class="hero home-hero">
+    <navigation-bar title="" back="{{false}}" color="#ffffff" background="transparent" />
+    <view class="hero-body">
+      <view class="hero-kicker">NFC · 文旅互动探索</view>
+      <view class="hero-title">{{activity.name || '城市记忆探索'}}</view>
+      <view class="hero-slogan">{{activity.slogan || '触碰历史，点亮城市'}}</view>
+      <view class="hero-rule"></view>
+      <view class="hero-summary">{{activity.summary || '正在加载活动信息…'}}</view>
+      <view class="hero-btn" bindtap="goActivity" hover-class="hero-btn--hover">
+        <text>查看活动详情</text>
+        <text class="hero-btn-arrow">›</text>
+      </view>
+    </view>
+    <view class="nfc-orbit">
+      <view class="nfc-ring nfc-ring--one"></view>
+      <view class="nfc-ring nfc-ring--two"></view>
+      <view class="nfc-core">NFC</view>
+    </view>
+  </view>
+
+  <view class="content">
+    <view class="card stats-card">
+      <view class="stats-row">
+        <view class="stat">
+          <text class="stat-num">{{stats.checked}}</text>
+          <text class="stat-label">已打卡</text>
+        </view>
+        <view class="stat-sep"></view>
+        <view class="stat">
+          <text class="stat-num">{{stats.badges}}</text>
+          <text class="stat-label">已获徽章</text>
+        </view>
+        <view class="stat-sep"></view>
+        <view class="stat">
+          <text class="stat-num">{{stats.total}}</text>
+          <text class="stat-label">点位总数</text>
+        </view>
+      </view>
+      <view class="progress-line">
+        <view class="progress-track"><view class="progress-bar" style="width: {{stats.progress}}%"></view></view>
+        <text class="progress-text">探索进度 {{stats.progress}}%</text>
+      </view>
+    </view>
+
+    <view class="section-head">
+      <text class="section-title">探索方式</text>
+      <text class="section-desc">选择你的玩法</text>
+    </view>
+    <view class="quick-grid">
+      <view class="quick-item" data-url="/pages/activity/activity?id={{activity.id}}" data-tab="false" bindtap="goQuick" hover-class="quick-item--hover">
+        <view class="quick-icon quick-icon--nfc">⌁</view>
+        <text class="quick-title">触碰探索</text>
+        <text class="quick-desc">NFC 开启故事</text>
+      </view>
+      <view class="quick-item" data-url="/pages/map/map" data-tab="true" bindtap="goQuick" hover-class="quick-item--hover">
+        <view class="quick-icon quick-icon--map">◎</view>
+        <text class="quick-title">探索地图</text>
+        <text class="quick-desc">点位与路线</text>
+      </view>
+      <view class="quick-item" data-url="/pages/badges/badges" data-tab="true" bindtap="goQuick" hover-class="quick-item--hover">
+        <view class="quick-icon quick-icon--badge">✦</view>
+        <text class="quick-title">我的徽章</text>
+        <text class="quick-desc">收集成就</text>
+      </view>
+    </view>
+
+    <view class="section-head">
+      <text class="section-title">精选点位</text>
+      <text class="section-desc">从这些地方开始</text>
+    </view>
+    <spot-card wx:for="{{featured}}" wx:key="id" spot="{{item}}" index="{{index}}" bind:tap="goSpot" />
+
+    <view wx:if="{{!loading && featured.length === 0}}" class="empty">暂无点位数据</view>
+  </view>
+</view>

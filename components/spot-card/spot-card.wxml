@@ -1,0 +1,14 @@
+<view class="spot-card" bindtap="onTap" hover-class="spot-card--hover" hover-stay-time="100">
+  <view class="spot-thumb tone-{{spot.coverTone}}">
+    <text class="spot-order">{{index + 1 < 10 ? '0' + (index + 1) : index + 1}}</text>
+  </view>
+  <view class="spot-info">
+    <view class="spot-name ellipsis">{{spot.name}}</view>
+    <view class="spot-sub ellipsis">{{spot.subtitle}}</view>
+    <view class="spot-meta">
+      <text class="spot-tag">{{spot.category}}</text>
+      <text wx:if="{{spot.checked}}" class="spot-checked">已打卡</text>
+    </view>
+  </view>
+  <view class="spot-arrow">›</view>
+</view>

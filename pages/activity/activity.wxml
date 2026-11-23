@@ -1,0 +1,61 @@
+<view class="page page--plain">
+  <view class="hero activity-hero">
+    <navigation-bar title="活动详情" back="{{true}}" color="#ffffff" background="transparent" />
+    <view class="activity-head">
+      <view class="activity-kicker">FEATURED EVENT</view>
+      <view class="activity-name">{{activity.name || '活动详情'}}</view>
+      <view class="activity-slogan">{{activity.slogan}}</view>
+      <view class="activity-meta">
+        <view class="meta-item">◷ {{activity.period}}</view>
+        <view class="meta-item">⌖ {{activity.location}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="content">
+    <view class="card progress-card">
+      <view class="progress-top">
+        <text class="progress-label">我的探索进度</text>
+        <text class="progress-value">{{stats.checked}} / {{stats.total}} 点位</text>
+      </view>
+      <view class="progress-track">
+        <view class="progress-bar" style="width: {{stats.progress}}%"></view>
+      </view>
+      <view class="progress-bottom">
+        <text>已解锁徽章 {{stats.badges}} / {{stats.badgeTotal}}</text>
+        <text class="progress-percent">{{stats.progress}}%</text>
+      </view>
+    </view>
+
+    <view class="section-head">
+      <text class="section-title">活动介绍</text>
+    </view>
+    <view class="card text-card">
+      <view class="desc">{{activity.description || '活动介绍加载中…'}}</view>
+    </view>
+
+    <view class="section-head">
+      <text class="section-title">活动规则</text>
+      <text class="section-desc">参与前请了解</text>
+    </view>
+    <view class="card rule-card">
+      <view class="rule-item" wx:for="{{activity.rules}}" wx:key="title">
+        <view class="rule-index">{{index + 1}}</view>
+        <view class="rule-body">
+          <view class="rule-title">{{item.title}}</view>
+          <view class="rule-desc">{{item.desc}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-head">
+      <text class="section-title">活动点位</text>
+      <text class="section-desc">{{stats.checked}} / {{stats.total}} 已打卡</text>
+    </view>
+    <spot-card wx:for="{{spots}}" wx:key="id" spot="{{item}}" index="{{index}}" bind:tap="goSpot" />
+
+    <view class="btn-primary bottom-cta" bindtap="goMap" hover-class="bottom-cta--hover">
+      查看探索地图
+    </view>
+  </view>
+</view>

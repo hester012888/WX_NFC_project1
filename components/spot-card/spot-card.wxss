@@ -1,0 +1,84 @@
+.spot-card {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  background: #ffffff;
+  border: 1rpx solid #e7eef0;
+  border-radius: 22rpx;
+  box-shadow: 0 10rpx 28rpx rgba(18, 67, 74, 0.05);
+}
+
+.spot-card--hover {
+  background: #f8fbfb;
+}
+
+.spot-thumb {
+  width: 108rpx;
+  height: 108rpx;
+  flex: none;
+  border-radius: 18rpx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 12rpx;
+}
+
+.spot-order {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 26rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+.tone-teal { background: linear-gradient(135deg, #0f8f88, #57c2b3); }
+.tone-blue { background: linear-gradient(135deg, #2f6fb0, #6db4e0); }
+.tone-amber { background: linear-gradient(135deg, #c98635, #f0c078); }
+.tone-indigo { background: linear-gradient(135deg, #4a5aa8, #8c97d6); }
+.tone-violet { background: linear-gradient(135deg, #7052a8, #b493dc); }
+.tone-green { background: linear-gradient(135deg, #3c8f5c, #8ccb9a); }
+
+.spot-info {
+  flex: 1;
+  min-width: 0;
+  margin-left: 22rpx;
+}
+
+.spot-name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #17313a;
+}
+
+.spot-sub {
+  margin-top: 4rpx;
+  font-size: 24rpx;
+  color: #8b9da4;
+}
+
+.spot-meta {
+  margin-top: 10rpx;
+  display: flex;
+  align-items: center;
+}
+
+.spot-tag {
+  padding: 2rpx 12rpx;
+  border-radius: 16rpx;
+  background: #e3f4f1;
+  color: #075f5c;
+  font-size: 20rpx;
+}
+
+.spot-checked {
+  margin-left: 12rpx;
+  color: #0c8c86;
+  font-size: 20rpx;
+}
+
+.spot-arrow {
+  padding-left: 12rpx;
+  color: #a8b8bd;
+  font-size: 44rpx;
+  line-height: 1;
+}

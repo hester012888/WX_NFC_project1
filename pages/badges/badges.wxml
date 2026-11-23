@@ -1,0 +1,54 @@
+<view class="page">
+  <navigation-bar title="我的徽章" back="{{false}}" color="#17313a" background="#ffffff" />
+
+  <view class="hero badge-hero">
+    <view class="badge-hero-label">BADGE COLLECTION</view>
+    <view class="badge-hero-title">每一枚徽章，都是一段城市记忆</view>
+    <view class="badge-hero-progress">
+      <view class="badge-hero-count">{{unlockedCount}}<text class="badge-hero-total"> / {{badges.length}}</text></view>
+      <view class="badge-hero-text">已解锁徽章</view>
+    </view>
+    <view class="badge-hero-ring"></view>
+  </view>
+
+  <view class="content">
+    <view class="section-head badge-section-head">
+      <text class="section-title">徽章墙</text>
+      <text class="section-desc">点击徽章查看详情</text>
+    </view>
+
+    <view class="badge-grid">
+      <view
+        wx:for="{{badges}}"
+        wx:key="id"
+        class="badge-cell"
+        data-id="{{item.id}}"
+        bindtap="onBadgeTap"
+        hover-class="badge-cell--hover"
+      >
+        <view class="badge-medallion tone-{{item.tone}} {{item.unlocked ? '' : 'badge-medallion--locked'}}">
+          <view class="badge-medallion-inner">{{item.symbol}}</view>
+          <view wx:if="{{!item.unlocked}}" class="badge-lock">?</view>
+        </view>
+        <view class="badge-name {{item.unlocked ? '' : 'badge-name--locked'}}">{{item.name}}</view>
+        <view class="badge-state">{{item.unlocked ? '已解锁' : '未解锁'}}</view>
+      </view>
+    </view>
+
+    <view wx:if="{{!loading && badges.length === 0}}" class="empty">暂无徽章配置</view>
+
+    <view class="btn-primary badge-bottom" bindtap="goMap">前往地图继续收集</view>
+  </view>
+
+  <view wx:if="{{showDetail && current}}" class="modal-mask" bindtap="closeDetail">
+    <view class="detail-card" catchtap="closeDetail">
+      <view class="detail-medallion tone-{{current.tone}} {{current.unlocked ? '' : 'badge-medallion--locked'}}">
+        {{current.unlocked ? current.symbol : '?'}}
+      </view>
+      <view class="detail-name">{{current.name}}</view>
+      <view class="detail-status">{{current.unlocked ? '已于 ' + current.unlockedAt + ' 解锁' : '完成对应点位打卡后解锁'}}</view>
+      <view class="detail-desc">{{current.desc}}</view>
+      <view class="detail-btn" bindtap="closeDetail">知道了</view>
+    </view>
+  </view>
+</view>
