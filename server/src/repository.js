@@ -196,6 +196,176 @@ function recordDeviceEvent({ deviceId = '', uid = '', type = 'tag_read', payload
   })()
 }
 
+function makeError(message, status) {
+  const error = new Error(message)
+  error.status = status
+  return error
+}
+
+function tagRowToDto(row) {
+  return {
+    uid: row.uid,
+    rawUid: row.raw_uid,
+    activityId: row.activity_id,
+    pointId: row.point_id,
+    status: row.status,
+    boundAt: row.bound_at,
+    unboundAt: row.unbound_at,
+    activityName: row.activity_name || '',
+    pointName: row.point_name || ''
+  }
+}
+
+function getTag(rawUid) {
+  const normalized = normalizeUid(rawUid)
+  if (!normalized.ok) return null
+  const row = getDb().prepare(`
+    SELECT t.*, a.name AS activity_name, p.name AS point_name
+    FROM nfc_tags t
+    LEFT JOIN activities a ON a.id = t.activity_id
+    LEFT JOIN points p ON p.id = t.point_id
+    WHERE t.uid = ?
+    ORDER BY CASE t.status WHEN 'active' THEN 0 ELSE 1 END, t.id DESC
+    LIMIT 1
+  `).get(normalized.uid)
+  return row ? tagRowToDto(row) : null
+}
+
+function tagExists(rawUid) {
+  return getTag(rawUid) !== null
+}
+
+function isConstraintError(err) {
+  return typeof err.code === 'string' && err.code.startsWith('SQLITE_CONSTRAINT')
+}
+
+function createTag(rawUid) {
+  const normalized = normalizeUid(rawUid)
+  if (!normalized.ok) throw makeError(normalized.error, 400)
+  const db = getDb()
+  try {
+    return db.transaction(() => {
+      if (db.prepare('SELECT 1 FROM nfc_tags WHERE uid = ?').get(normalized.uid)) {
+        throw makeError('UID 已存在', 409)
+      }
+      const now = Date.now()
+      db.prepare(`
+        INSERT INTO nfc_tags (uid, raw_uid, status, created_at, updated_at)
+        VALUES (?, ?, 'unbound', ?, ?)
+      `).run(normalized.uid, rawUid, now, now)
+      return getTag(normalized.uid)
+    })()
+  } catch (err) {
+    if (isConstraintError(err)) throw makeError('UID 已存在', 409)
+    throw err
+  }
+}
+
+function validateBinding(activityId, pointId) {
+  if (!activityId) throw makeError('缺少活动 ID', 400)
+  if (!pointId) throw makeError('缺少点位 ID', 400)
+  const activity = getActivityRecord(activityId)
+  if (!activity) throw makeError('活动不存在', 404)
+  if (activity.status !== 'active') throw makeError('活动已停用', 400)
+  const point = getPointRecord(pointId)
+  if (!point) throw makeError('点位不存在', 404)
+  if (point.status !== 'active') throw makeError('点位已停用', 400)
+  if (point.activity_id !== activityId) throw makeError('点位不属于该活动', 400)
+}
+
+function bindTag(rawUid, activityId, pointId) {
+  const normalized = normalizeUid(rawUid)
+  if (!normalized.ok) throw makeError(normalized.error, 400)
+  validateBinding(activityId, pointId)
+  const db = getDb()
+  try {
+    return db.transaction(() => {
+      const row = db.prepare('SELECT * FROM nfc_tags WHERE uid = ?').get(normalized.uid)
+      if (!row) throw makeError('UID 不存在，请先新增', 404)
+      if (row.status === 'active' && row.point_id === pointId) {
+        throw makeError('UID 已绑定到该点位', 409)
+      }
+      if (row.status === 'active') {
+        throw makeError('UID 已绑定，请使用改绑接口', 409)
+      }
+      const now = Date.now()
+      db.prepare(`
+        UPDATE nfc_tags
+        SET activity_id = ?, point_id = ?, status = 'active', bound_at = ?, unbound_at = NULL, updated_at = ?
+        WHERE id = ?
+      `).run(activityId, pointId, now, now, row.id)
+      return getTag(normalized.uid)
+    })()
+  } catch (err) {
+    if (isConstraintError(err)) throw makeError('UID 已被其他绑定占用', 409)
+    throw err
+  }
+}
+
+function unbindTag(rawUid) {
+  const normalized = normalizeUid(rawUid)
+  if (!normalized.ok) throw makeError(normalized.error, 400)
+  const db = getDb()
+  return db.transaction(() => {
+    const row = db.prepare('SELECT * FROM nfc_tags WHERE uid = ?').get(normalized.uid)
+    if (!row) throw makeError('UID 不存在', 404)
+    if (row.status !== 'active') return getTag(normalized.uid)
+    const now = Date.now()
+    db.prepare(`
+      UPDATE nfc_tags SET status = 'unbound', unbound_at = ?, updated_at = ? WHERE id = ?
+    `).run(now, now, row.id)
+    return getTag(normalized.uid)
+  })()
+}
+
+function rebindTag(rawUid, activityId, pointId) {
+  const normalized = normalizeUid(rawUid)
+  if (!normalized.ok) throw makeError(normalized.error, 400)
+  validateBinding(activityId, pointId)
+  const db = getDb()
+  try {
+    return db.transaction(() => {
+      const row = db.prepare('SELECT * FROM nfc_tags WHERE uid = ?').get(normalized.uid)
+      if (!row) throw makeError('UID 不存在，请先新增', 404)
+      if (row.status === 'active' && row.activity_id === activityId && row.point_id === pointId) {
+        return getTag(normalized.uid)
+      }
+      const now = Date.now()
+      db.prepare(`
+        UPDATE nfc_tags
+        SET activity_id = ?, point_id = ?, status = 'active', bound_at = ?, unbound_at = NULL, updated_at = ?
+        WHERE id = ?
+      `).run(activityId, pointId, now, now, row.id)
+      return getTag(normalized.uid)
+    })()
+  } catch (err) {
+    if (isConstraintError(err)) throw makeError('UID 已被其他绑定占用', 409)
+    throw err
+  }
+}
+
+function listTags({ activityId = '', pointId = '' } = {}) {
+  const clauses = []
+  const params = []
+  if (activityId) {
+    clauses.push('t.activity_id = ?')
+    params.push(activityId)
+  }
+  if (pointId) {
+    clauses.push('t.point_id = ?')
+    params.push(pointId)
+  }
+  const where = clauses.length ? 'WHERE ' + clauses.join(' AND ') : ''
+  return getDb().prepare(`
+    SELECT t.*, a.name AS activity_name, p.name AS point_name
+    FROM nfc_tags t
+    LEFT JOIN activities a ON a.id = t.activity_id
+    LEFT JOIN points p ON p.id = t.point_id
+    ${where}
+    ORDER BY t.id
+  `).all(...params).map(tagRowToDto)
+}
+
 module.exports = {
   getVisitorId,
   getActivity,
@@ -210,5 +380,12 @@ module.exports = {
   getBadges,
   getMedia,
   resolveUid,
-  recordDeviceEvent
+  recordDeviceEvent,
+  getTag,
+  tagExists,
+  createTag,
+  bindTag,
+  unbindTag,
+  rebindTag,
+  listTags
 }

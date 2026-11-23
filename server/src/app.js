@@ -7,6 +7,7 @@ const { migrate } = require('./migrate')
 const seed = require('./seed')
 const api = require('./routes/api')
 const admin = require('./routes/admin')
+const nfcTags = require('./routes/nfc-tags')
 
 function createApp() {
   const app = express()
@@ -15,6 +16,7 @@ function createApp() {
   app.use(express.json({ limit: '1mb' }))
 
   app.use('/api', api)
+  app.use('/api/nfc/tags', nfcTags)
   app.use('/api/admin', admin)
 
   app.use((req, res) => {
