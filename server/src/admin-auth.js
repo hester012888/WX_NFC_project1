@@ -35,6 +35,28 @@ function findAdminByUsername(db, username) {
   return db.prepare('SELECT * FROM admins WHERE username = ?').get(username) || null
 }
 
+function createAdmin({ username, password, displayName = '', role = 'operator' }, db = getDb()) {
+  if (typeof username !== 'string' || !/^[A-Za-z0-9_-]{3,32}$/.test(username.trim())) {
+    throw authError('管理员用户名需为 3-32 位字母、数字、下划线或连字符', 400, 'INVALID_USERNAME')
+  }
+  if (typeof password !== 'string' || password.length < 12) {
+    throw authError('管理员密码长度至少 12 位', 400, 'INVALID_PASSWORD')
+  }
+  if (!['super_admin', 'operator'].includes(role)) {
+    throw authError('管理员角色非法', 400, 'INVALID_ROLE')
+  }
+  if (db.prepare('SELECT 1 FROM admins WHERE username = ?').get(username.trim())) {
+    throw authError('管理员用户名已存在', 409, 'ADMIN_EXISTS')
+  }
+  const hash = bcrypt.hashSync(password, 12)
+  const now = Date.now()
+  db.prepare(`
+    INSERT INTO admins (username, password_hash, display_name, role, status, created_at, updated_at)
+    VALUES (?, ?, ?, ?, 'active', ?, ?)
+  `).run(username.trim(), hash, displayName, role, now, now)
+  return publicAdmin(db.prepare('SELECT * FROM admins WHERE username = ?').get(username.trim()))
+}
+
 function login({ username, password }) {
   if (typeof username !== 'string' || !username.trim()) throw authError('缺少管理员用户名', 400, 'INVALID_USERNAME')
   if (typeof password !== 'string' || !password) throw authError('缺少管理员密码', 400, 'INVALID_PASSWORD')
@@ -148,6 +170,7 @@ module.exports = {
   hashToken,
   newToken,
   publicAdmin,
+  createAdmin,
   login,
   verify,
   requireAdmin,
