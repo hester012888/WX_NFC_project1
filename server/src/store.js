@@ -91,6 +91,6 @@ function resolveUid(uid) {
 }
 
 module.exports = {
-  activity, spots, badges,
+  activity, spots, badges, uidBindings,
   getVisitorId, getCheckins, addCheckin, statsFor, decorateSpots, resolveUid
 }
