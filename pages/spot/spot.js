@@ -13,6 +13,7 @@ Page({
       tags: [],
       media: { images: [], video: '', audio: '', videoTitle: '', audioTitle: '' }
     },
+    categoryMark: '景',
     loading: true,
     checking: false,
     showBadge: false,
@@ -53,7 +54,8 @@ Page({
     }
     try {
       const spot = await service.getSpot(this.data.id)
-      this.setData({ spot, loading: false })
+      const categoryMark = spot && spot.category ? String(spot.category).charAt(0) : '景'
+      this.setData({ spot, categoryMark, loading: false })
       if (spot && spot.media && spot.media.audio) {
         this.audioCtx.src = spot.media.audio
       }

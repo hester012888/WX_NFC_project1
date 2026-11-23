@@ -1,20 +1,39 @@
-<view class="page">
-  <navigation-bar title="我的徽章" back="{{false}}" color="#17313a" background="#ffffff" />
+<view class="page badge-page">
+  <navigation-bar title="我的徽章" back="{{false}}" color="#ffffff" background="transparent" />
 
   <view class="hero badge-hero">
-    <view class="badge-hero-label">BADGE COLLECTION</view>
-    <view class="badge-hero-title">每一枚徽章，都是一段城市记忆</view>
-    <view class="badge-hero-progress">
-      <view class="badge-hero-count">{{unlockedCount}}<text class="badge-hero-total"> / {{badges.length}}</text></view>
-      <view class="badge-hero-text">已解锁徽章</view>
+    <view class="album-pattern"></view>
+
+    <view class="badge-hero-content">
+      <view class="eyebrow badge-eyebrow">BADGE COLLECTION</view>
+      <view class="badge-hero-title display">城市记忆收藏册</view>
+      <view class="badge-hero-sub">每一枚徽章，都是一段被点亮的城市记忆</view>
+
+      <view class="collection-panel">
+        <view class="collection-count">
+          <text class="collection-num">{{unlockedCount}}</text>
+          <text class="collection-total">/ {{badges.length}}</text>
+        </view>
+        <view class="collection-body">
+          <view class="collection-label">已解锁徽章 · {{collectionPercent}}%</view>
+          <view class="collection-track">
+            <view class="collection-fill {{progressClass}}"></view>
+          </view>
+          <view class="collection-note">触碰城市，慢慢集齐</view>
+        </view>
+        <view class="collection-seal display">藏</view>
+      </view>
     </view>
-    <view class="badge-hero-ring"></view>
   </view>
 
-  <view class="content">
-    <view class="section-head badge-section-head">
-      <text class="section-title">徽章墙</text>
-      <text class="section-desc">点击徽章查看详情</text>
+  <view class="badge-body">
+    <view class="album-toolbar">
+      <view class="toolbar-left">
+        <text class="toolbar-title display">徽章墙</text>
+        <text class="toolbar-desc">点击徽章查看故事</text>
+      </view>
+      <view class="toolbar-rule"></view>
+      <view class="toolbar-count">{{unlockedCount}} 枚已收入</view>
     </view>
 
     <view class="badge-grid">
@@ -25,30 +44,42 @@
         data-id="{{item.id}}"
         bindtap="onBadgeTap"
         hover-class="badge-cell--hover"
+        hover-stay-time="100"
       >
-        <view class="badge-medallion tone-{{item.tone}} {{item.unlocked ? '' : 'badge-medallion--locked'}}">
-          <view class="badge-medallion-inner">{{item.symbol}}</view>
-          <view wx:if="{{!item.unlocked}}" class="badge-lock">?</view>
+        <view class="badge-index">{{index + 1 < 10 ? '0' + (index + 1) : index + 1}}</view>
+        <view class="badge-stage">
+          <view class="badge-medallion tone-{{item.tone}} {{item.unlocked ? '' : 'badge-medallion--locked'}}">
+            <view class="medallion-ring"></view>
+            <view class="medallion-inner display">{{item.unlocked ? item.symbol : '?'}}</view>
+          </view>
+          <view class="badge-pedestal"></view>
         </view>
-        <view class="badge-name {{item.unlocked ? '' : 'badge-name--locked'}}">{{item.name}}</view>
-        <view class="badge-state">{{item.unlocked ? '已解锁' : '未解锁'}}</view>
+        <view class="badge-name display {{item.unlocked ? '' : 'badge-name--locked'}}">{{item.name}}</view>
+        <view class="badge-state {{item.unlocked ? '' : 'badge-state--locked'}}">
+          {{item.unlocked ? '已解锁' : '待解锁'}}
+        </view>
       </view>
     </view>
 
     <view wx:if="{{!loading && badges.length === 0}}" class="empty">暂无徽章配置</view>
 
-    <view class="btn-primary badge-bottom" bindtap="goMap">前往地图继续收集</view>
+    <view class="btn-primary badge-bottom pressable" bindtap="goMap" hover-class="badge-bottom--hover">
+      前往地图继续收集
+      <text class="badge-bottom-arrow">↗</text>
+    </view>
   </view>
 
-  <view wx:if="{{showDetail && current}}" class="modal-mask" bindtap="closeDetail">
-    <view class="detail-card" catchtap="closeDetail">
+  <view wx:if="{{showDetail && current}}" class="modal-mask anim-fade" bindtap="closeDetail">
+    <view class="detail-card anim-rise" catchtap="closeDetail">
+      <view class="detail-kicker">{{current.unlocked ? 'COLLECTED' : 'LOCKED'}}</view>
       <view class="detail-medallion tone-{{current.tone}} {{current.unlocked ? '' : 'badge-medallion--locked'}}">
-        {{current.unlocked ? current.symbol : '?'}}
+        <view class="detail-ring"></view>
+        <text>{{current.unlocked ? current.symbol : '?'}}</text>
       </view>
-      <view class="detail-name">{{current.name}}</view>
+      <view class="detail-name display">{{current.name}}</view>
       <view class="detail-status">{{current.unlocked ? '已于 ' + current.unlockedAt + ' 解锁' : '完成对应点位打卡后解锁'}}</view>
       <view class="detail-desc">{{current.desc}}</view>
-      <view class="detail-btn" bindtap="closeDetail">知道了</view>
+      <view class="detail-btn pressable" bindtap="closeDetail">收进收藏册</view>
     </view>
   </view>
 </view>

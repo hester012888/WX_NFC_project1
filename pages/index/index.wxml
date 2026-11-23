@@ -1,45 +1,74 @@
-<view class="page">
+<view class="page home-page">
   <view class="hero home-hero">
     <navigation-bar title="" back="{{false}}" color="#ffffff" background="transparent" />
+
+    <view class="hero-orb hero-orb--one"></view>
+    <view class="hero-orb hero-orb--two"></view>
+
     <view class="hero-body">
-      <view class="hero-kicker">NFC · 文旅互动探索</view>
-      <view class="hero-title">{{activity.name || '城市记忆探索'}}</view>
-      <view class="hero-slogan">{{activity.slogan || '触碰历史，点亮城市'}}</view>
-      <view class="hero-rule"></view>
-      <view class="hero-summary">{{activity.summary || '正在加载活动信息…'}}</view>
-      <view class="hero-btn" bindtap="goActivity" hover-class="hero-btn--hover">
-        <text>查看活动详情</text>
-        <text class="hero-btn-arrow">›</text>
+      <view class="brand-line anim-rise">
+        <view class="brand-seal display">{{brandMark}}</view>
+        <view class="brand-copy">
+          <view class="brand-kicker">NFC · CITY ARCHIVE</view>
+          <view class="brand-edition">{{heroEdition}}</view>
+        </view>
+        <view class="brand-nfc">NFC</view>
+      </view>
+
+      <view class="hero-title display anim-rise">{{activity.name || '城市记忆探索'}}</view>
+      <view class="hero-slogan anim-rise">{{activity.slogan || '触碰历史，点亮城市'}}</view>
+
+      <view class="hero-rule anim-fade"></view>
+
+      <view class="hero-summary anim-rise">{{activity.summary || '正在加载活动信息…'}}</view>
+
+      <view class="hero-actions anim-rise">
+        <view class="hero-btn pressable" bindtap="goActivity" hover-class="hero-btn--hover" hover-stay-time="120">
+          <text>进入活动</text>
+          <text class="hero-btn-arrow">↗</text>
+        </view>
+        <view class="hero-ghost pressable" data-url="/pages/map/map" data-tab="true" bindtap="goQuick" hover-class="hero-ghost--hover">
+          打开地图
+        </view>
       </view>
     </view>
-    <view class="nfc-orbit">
-      <view class="nfc-ring nfc-ring--one"></view>
-      <view class="nfc-ring nfc-ring--two"></view>
-      <view class="nfc-core">NFC</view>
+
+    <view class="hero-footer">
+      <view class="hero-index">NO.{{stats.checked < 10 ? '0' + stats.checked : stats.checked}} / {{stats.total || '--'}}</view>
+      <view class="hero-scroll">向下探索</view>
     </view>
   </view>
 
-  <view class="content">
-    <view class="card stats-card">
-      <view class="stats-row">
-        <view class="stat">
-          <text class="stat-num">{{stats.checked}}</text>
-          <text class="stat-label">已打卡</text>
+  <view class="home-body">
+    <view class="journey-card anim-rise">
+      <view class="journey-head">
+        <view>
+          <view class="eyebrow">JOURNEY OVERVIEW</view>
+          <view class="journey-title display">我的城市探索进度</view>
         </view>
-        <view class="stat-sep"></view>
-        <view class="stat">
-          <text class="stat-num">{{stats.badges}}</text>
-          <text class="stat-label">已获徽章</text>
-        </view>
-        <view class="stat-sep"></view>
-        <view class="stat">
-          <text class="stat-num">{{stats.total}}</text>
-          <text class="stat-label">点位总数</text>
-        </view>
+        <view class="journey-percent">{{stats.progress}}<text>%</text></view>
       </view>
-      <view class="progress-line">
-        <view class="progress-track"><view class="progress-bar" style="width: {{stats.progress}}%"></view></view>
-        <text class="progress-text">探索进度 {{stats.progress}}%</text>
+
+      <view class="journey-track">
+        <view class="journey-fill {{progressClass}}"></view>
+        <view class="journey-glint"></view>
+      </view>
+
+      <view class="journey-metrics">
+        <view class="jmetric">
+          <text class="jmetric-num">{{stats.checked}}</text>
+          <text class="jmetric-label">已打卡</text>
+        </view>
+        <view class="jmetric-sep"></view>
+        <view class="jmetric">
+          <text class="jmetric-num">{{stats.badges}}</text>
+          <text class="jmetric-label">已获徽章</text>
+        </view>
+        <view class="jmetric-sep"></view>
+        <view class="jmetric">
+          <text class="jmetric-num">{{stats.total}}</text>
+          <text class="jmetric-label">点位总数</text>
+        </view>
       </view>
     </view>
 
@@ -47,21 +76,41 @@
       <text class="section-title">探索方式</text>
       <text class="section-desc">选择你的玩法</text>
     </view>
-    <view class="quick-grid">
-      <view class="quick-item" data-url="/pages/activity/activity?id={{activity.id}}" data-tab="false" bindtap="goQuick" hover-class="quick-item--hover">
-        <view class="quick-icon quick-icon--nfc">⌁</view>
-        <text class="quick-title">触碰探索</text>
-        <text class="quick-desc">NFC 开启故事</text>
+
+    <view class="explore-grid">
+      <view class="explore-item explore-item--nfc pressable" data-url="/pages/activity/activity?id={{activity.id}}" data-tab="false" bindtap="goQuick" hover-class="explore-item--hover">
+        <view class="explore-icon explore-icon--nfc">
+          <view class="glyph-nfc"></view>
+        </view>
+        <view class="explore-copy">
+          <view class="explore-title">触碰探索</view>
+          <view class="explore-desc">NFC 开启城市故事</view>
+        </view>
+        <view class="explore-arrow">↗</view>
       </view>
-      <view class="quick-item" data-url="/pages/map/map" data-tab="true" bindtap="goQuick" hover-class="quick-item--hover">
-        <view class="quick-icon quick-icon--map">◎</view>
-        <text class="quick-title">探索地图</text>
-        <text class="quick-desc">点位与路线</text>
-      </view>
-      <view class="quick-item" data-url="/pages/badges/badges" data-tab="true" bindtap="goQuick" hover-class="quick-item--hover">
-        <view class="quick-icon quick-icon--badge">✦</view>
-        <text class="quick-title">我的徽章</text>
-        <text class="quick-desc">收集成就</text>
+
+      <view class="explore-row">
+        <view class="explore-item explore-item--map pressable" data-url="/pages/map/map" data-tab="true" bindtap="goQuick" hover-class="explore-item--hover">
+          <view class="explore-icon explore-icon--map">
+            <view class="glyph-map"></view>
+          </view>
+          <view class="explore-copy">
+            <view class="explore-title">探索地图</view>
+            <view class="explore-desc">坐标与路线</view>
+          </view>
+          <view class="explore-arrow">›</view>
+        </view>
+
+        <view class="explore-item explore-item--badge pressable" data-url="/pages/badges/badges" data-tab="true" bindtap="goQuick" hover-class="explore-item--hover">
+          <view class="explore-icon explore-icon--badge">
+            <view class="glyph-badge"></view>
+          </view>
+          <view class="explore-copy">
+            <view class="explore-title">我的徽章</view>
+            <view class="explore-desc">收集成就</view>
+          </view>
+          <view class="explore-arrow">›</view>
+        </view>
       </view>
     </view>
 
@@ -69,8 +118,17 @@
       <text class="section-title">精选点位</text>
       <text class="section-desc">从这些地方开始</text>
     </view>
-    <spot-card wx:for="{{featured}}" wx:key="id" spot="{{item}}" index="{{index}}" bind:tap="goSpot" />
+
+    <view class="spot-feed">
+      <spot-card wx:for="{{featured}}" wx:key="id" spot="{{item}}" index="{{index}}" bind:tap="goSpot" />
+    </view>
 
     <view wx:if="{{!loading && featured.length === 0}}" class="empty">暂无点位数据</view>
+
+    <view class="home-colophon">
+      <view class="colophon-line"></view>
+      <text>NFC 文旅互动探索 · {{heroEdition}}</text>
+      <view class="colophon-line"></view>
+    </view>
   </view>
 </view>

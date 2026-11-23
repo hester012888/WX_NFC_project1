@@ -1,70 +1,104 @@
-<view class="page">
-  <navigation-bar title="个人中心" back="{{false}}" color="#17313a" background="#ffffff" />
+<view class="page profile-page">
+  <navigation-bar title="个人中心" back="{{false}}" color="#ffffff" background="transparent" />
 
   <view class="hero profile-hero">
-    <view class="avatar">游</view>
-    <view class="profile-info">
-      <view class="profile-name">文旅探索者</view>
-      <view class="profile-id">ID: {{profile.visitorId || '--'}}</view>
+    <view class="profile-texture"></view>
+
+    <view class="member-card anim-rise">
+      <view class="member-top">
+        <view class="member-brand">NFC · CITY PASS</view>
+        <view class="member-level display">{{levelName}}</view>
+      </view>
+
+      <view class="member-identity">
+        <view class="avatar display">旅</view>
+        <view class="profile-info">
+          <view class="profile-name display">文旅探索者</view>
+          <view class="profile-id">ID: {{profile.visitorId || '--'}}</view>
+        </view>
+        <view class="member-chip">MEMBER</view>
+      </view>
+
+      <view class="member-bottom">
+        <view class="member-line"></view>
+        <text>城市记忆互动计划</text>
+        <view class="member-line"></view>
+      </view>
     </view>
-    <view class="profile-level">探索者</view>
   </view>
 
-  <view class="content">
-    <view class="card profile-stats">
-      <view class="pstat">
-        <text class="pstat-num">{{stats.checked}}</text>
-        <text class="pstat-label">打卡点位</text>
+  <view class="profile-body">
+    <view class="achievement-rail">
+      <view class="achievement-item">
+        <text class="achievement-num display">{{stats.checked}}</text>
+        <text class="achievement-label">打卡点位</text>
       </view>
-      <view class="pstat">
-        <text class="pstat-num">{{stats.badges}}</text>
-        <text class="pstat-label">获得徽章</text>
+      <view class="achievement-divider"></view>
+      <view class="achievement-item">
+        <text class="achievement-num display">{{stats.badges}}</text>
+        <text class="achievement-label">获得徽章</text>
       </view>
-      <view class="pstat">
-        <text class="pstat-num">{{stats.progress}}%</text>
-        <text class="pstat-label">活动进度</text>
+      <view class="achievement-divider"></view>
+      <view class="achievement-item">
+        <text class="achievement-num display">{{stats.progress}}%</text>
+        <text class="achievement-label">活动进度</text>
       </view>
     </view>
 
     <view class="section-head">
-      <text class="section-title">打卡记录</text>
+      <text class="section-title">旅程手账</text>
       <text class="section-desc">共 {{checkins.length}} 条</text>
     </view>
-    <view class="card history-card">
-      <view wx:if="{{checkins.length === 0}}" class="history-empty">
-        <view class="history-empty-icon">◎</view>
-        <view>还没有打卡记录</view>
-        <view class="history-empty-tip">去地图上找一个点位开始探索吧</view>
+
+    <view class="journal">
+      <view wx:if="{{checkins.length === 0}}" class="journal-empty">
+        <view class="journal-empty-mark">◎</view>
+        <view class="journal-empty-title">还没有打卡记录</view>
+        <view class="journal-empty-tip">去地图上找一个点位，写下第一页城市手账</view>
       </view>
-      <view wx:for="{{checkins}}" wx:key="spotId" class="history-item">
-        <view class="history-dot">✓</view>
-        <view class="history-body">
-          <view class="history-name">{{item.spotName}}</view>
-          <view class="history-time">{{item.timeText}} · 到访打卡</view>
+
+      <view wx:for="{{checkins}}" wx:key="spotId" class="journal-item">
+        <view class="journal-date">{{item.timeText}}</view>
+        <view class="journal-rail">
+          <view class="journal-dot"></view>
+          <view wx:if="{{index < checkins.length - 1}}" class="journal-line"></view>
         </view>
+        <view class="journal-body">
+          <view class="journal-name display">{{item.spotName}}</view>
+          <view class="journal-desc">到访打卡 · 城市记忆 +1</view>
+        </view>
+        <view class="journal-check">✓</view>
       </view>
     </view>
 
     <view class="section-head">
       <text class="section-title">快捷入口</text>
+      <text class="section-desc">继续你的城市探索</text>
     </view>
-    <view class="card menu-card">
+
+    <view class="menu-list">
       <view
         wx:for="{{menus}}"
         wx:key="id"
-        class="menu-item"
+        class="menu-item pressable"
         data-url="{{item.url}}"
         data-tab="{{item.tab}}"
         bindtap="onMenuTap"
         hover-class="menu-item--hover"
+        hover-stay-time="100"
       >
-        <view class="menu-title">{{item.title}}</view>
-        <view class="menu-desc">{{item.desc}}</view>
-        <text class="menu-arrow">›</text>
+        <view class="menu-icon menu-icon--{{item.icon}}">
+          <view class="menu-glyph"></view>
+        </view>
+        <view class="menu-copy">
+          <view class="menu-title">{{item.title}}</view>
+          <view class="menu-desc">{{item.desc}}</view>
+        </view>
+        <view class="menu-arrow">›</view>
       </view>
     </view>
 
     <view class="reset-btn" bindtap="onReset">重置演示数据</view>
-    <view class="profile-footer">NFC 文旅互动打卡 · 第一阶段基础版</view>
+    <view class="profile-footer">NFC 文旅互动打卡 · 城市记忆探索季</view>
   </view>
 </view>

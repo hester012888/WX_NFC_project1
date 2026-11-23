@@ -1,29 +1,42 @@
-<view class="page page--plain">
+<view class="page page--plain spot-page">
   <view class="hero spot-hero tone-{{spot.coverTone || 'teal'}}">
     <navigation-bar title="点位详情" back="{{true}}" color="#ffffff" background="transparent" />
+
+    <view class="spot-watermark display">{{categoryMark}}</view>
+    <view class="spot-hero-grid"></view>
+
     <view class="spot-head">
       <view class="spot-category">{{spot.category || '文化点位'}} · 第 {{spot.order || '-'}} 站</view>
-      <view class="spot-name">{{spot.name || '点位加载中'}}</view>
+      <view class="spot-name display">{{spot.name || '点位加载中'}}</view>
       <view class="spot-subtitle">{{spot.subtitle}}</view>
       <view class="spot-tags">
         <text wx:for="{{spot.tags}}" wx:key="*this" class="spot-tag">{{item}}</text>
       </view>
     </view>
+
+    <view class="spot-ordinal display">{{spot.order || '--'}}</view>
   </view>
 
-  <view class="content">
-    <view wx:if="{{nfcHint}}" class="nfc-hint">
-      <text class="nfc-hint-mark">⌁</text>
-      <text>{{nfcHint}}</text>
+  <view class="spot-body">
+    <view wx:if="{{nfcHint}}" class="nfc-hint anim-rise">
+      <view class="nfc-signal">
+        <view class="signal-wave"></view>
+        <view class="signal-wave signal-wave--two"></view>
+        <view class="signal-core"></view>
+      </view>
+      <text class="nfc-hint-text">{{nfcHint}}</text>
     </view>
 
-    <view class="card intro-card">
+    <view class="story-sheet anim-rise">
+      <view class="story-corner">FIELD NOTE / {{spot.order || '--'}}</view>
       <image wx:if="{{spot.coverUrl}}" class="cover-image" src="{{spot.coverUrl}}" mode="widthFix" />
       <view wx:else class="cover-placeholder tone-{{spot.coverTone || 'teal'}}">
-        <view class="cover-mark">NFC</view>
+        <view class="cover-orb"></view>
+        <view class="cover-mark display">NFC</view>
         <view class="cover-caption">触碰标签 · 开启故事</view>
       </view>
-      <view class="intro-title">{{spot.summary || '点位介绍'}}</view>
+
+      <view class="intro-title display">{{spot.summary || '点位介绍'}}</view>
       <view class="intro-text">{{spot.description || '介绍内容加载中…'}}</view>
     </view>
 
@@ -31,9 +44,12 @@
       <text class="section-title">影像与讲解</text>
       <text class="section-desc">多媒体内容</text>
     </view>
+
     <view class="media-list">
-      <view class="media-item" bindtap="onVideo" hover-class="media-item--hover">
-        <view class="media-icon media-icon--video">▶</view>
+      <view class="media-item pressable" bindtap="onVideo" hover-class="media-item--hover">
+        <view class="media-icon media-icon--video">
+          <view class="glyph-play"></view>
+        </view>
         <view class="media-body">
           <view class="media-title">{{spot.media.videoTitle || '点位视频'}}</view>
           <view class="media-desc">{{spot.media.video ? '点击播放视频介绍' : '视频资源待接入'}}</view>
@@ -41,14 +57,18 @@
         <video wx:if="{{spot.media.video}}" class="media-hidden-video" src="{{spot.media.video}}" />
         <text class="media-arrow">›</text>
       </view>
-      <view class="media-item" bindtap="onAudio" hover-class="media-item--hover">
-        <view class="media-icon media-icon--audio">{{audioPlaying ? 'Ⅱ' : '♫'}}</view>
+
+      <view class="media-item pressable" bindtap="onAudio" hover-class="media-item--hover">
+        <view class="media-icon media-icon--audio {{audioPlaying ? 'media-icon--playing' : ''}}">
+          <view class="glyph-audio {{audioPlaying ? 'glyph-audio--playing' : ''}}"></view>
+        </view>
         <view class="media-body">
           <view class="media-title">{{spot.media.audioTitle || '语音导览'}}</view>
           <view class="media-desc">{{audioPlaying ? '点击暂停播放' : (spot.media.audio ? '点击播放语音讲解' : '语音资源待接入')}}</view>
         </view>
         <text class="media-arrow">›</text>
       </view>
+
       <view wx:for="{{spot.media.images}}" wx:key="*this" class="media-image-wrap">
         <image class="media-image" src="{{item}}" mode="widthFix" />
       </view>
@@ -56,26 +76,35 @@
 
     <view wx:if="{{spot.checked}}" class="checked-card">
       <view class="checked-icon">✓</view>
-      <view>
-        <view class="checked-title">已完成打卡</view>
+      <view class="checked-copy">
+        <view class="checked-title display">已完成打卡</view>
         <view class="checked-desc">对应徽章已解锁，继续探索下一站吧</view>
       </view>
+      <view class="checked-stamp">VISITED</view>
     </view>
 
-    <view wx:else class="btn-primary checkin-btn" bindtap="onCheckin" hover-class="checkin-btn--hover">
-      {{checking ? '打卡中…' : '立即打卡 · 解锁徽章'}}
+    <view wx:else class="btn-primary checkin-btn pressable" bindtap="onCheckin" hover-class="checkin-btn--hover">
+      <view class="checkin-glyph"></view>
+      <text>{{checking ? '打卡中…' : '立即打卡 · 解锁徽章'}}</text>
+      <text class="checkin-arrow">↗</text>
     </view>
 
-    <view class="btn-ghost map-btn" bindtap="goMap">查看探索地图</view>
+    <view class="btn-ghost map-btn pressable" bindtap="goMap" hover-class="map-btn--hover">
+      查看探索地图
+      <text class="map-btn-arrow">›</text>
+    </view>
   </view>
 
-  <view wx:if="{{showBadge}}" class="modal-mask" bindtap="closeBadge">
-    <view class="badge-modal" catchtap="closeBadge">
-      <view class="modal-kicker">打卡成功</view>
-      <view class="modal-medallion tone-{{unlockedBadge.tone || 'teal'}}">{{unlockedBadge.symbol || '章'}}</view>
-      <view class="modal-title">{{unlockedBadge.name || '新徽章'}}</view>
+  <view wx:if="{{showBadge}}" class="modal-mask anim-fade" bindtap="closeBadge">
+    <view class="badge-modal anim-rise" catchtap="closeBadge">
+      <view class="modal-kicker">CHECK-IN COMPLETE</view>
+      <view class="modal-medallion tone-{{unlockedBadge.tone || 'teal'}}">
+        <view class="modal-ring"></view>
+        <text>{{unlockedBadge.symbol || '章'}}</text>
+      </view>
+      <view class="modal-title display">{{unlockedBadge.name || '新徽章'}}</view>
       <view class="modal-desc">{{unlockedBadge.desc || '继续探索，收集更多徽章'}}</view>
-      <view class="modal-btn" bindtap="closeBadge">继续探索</view>
+      <view class="modal-btn pressable" bindtap="closeBadge">继续探索</view>
     </view>
   </view>
 </view>

@@ -9,14 +9,14 @@
   ],
   "window": {
     "navigationStyle": "custom",
-    "backgroundColor": "#F3F7F8",
+    "backgroundColor": "#F4F2EB",
     "backgroundTextStyle": "dark"
   },
   "tabBar": {
     "custom": true,
-    "color": "#84969D",
-    "selectedColor": "#0C8C86",
-    "backgroundColor": "#FFFFFF",
+    "color": "#8FA3A4",
+    "selectedColor": "#0D6C64",
+    "backgroundColor": "#FFFDF7",
     "borderStyle": "white",
     "list": [
       { "pagePath": "pages/index/index", "text": "首页" },

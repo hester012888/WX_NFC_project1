@@ -1,164 +1,320 @@
 .activity-hero {
-  padding-bottom: 110rpx;
+  min-height: 620rpx;
+  padding-bottom: 130rpx;
+}
+
+.activity-watermark {
+  position: absolute;
+  right: 18rpx;
+  top: 88rpx;
+  z-index: 1;
+  font-size: 300rpx;
+  line-height: 1;
+  font-weight: 700;
+  color: rgba(255,255,255,0.055);
+  pointer-events: none;
+}
+
+.activity-corner {
+  position: absolute;
+  right: 40rpx;
+  bottom: 150rpx;
+  z-index: 2;
+  text-align: right;
+  font-size: 17rpx;
+  line-height: 1.5;
+  letter-spacing: 4rpx;
+  color: rgba(255,255,255,0.42);
 }
 
 .activity-head {
   position: relative;
-  z-index: 2;
-  padding: 30rpx 40rpx 0;
+  z-index: 3;
+  padding: 34rpx 40rpx 0;
 }
 
 .activity-kicker {
-  font-size: 22rpx;
+  font-size: 20rpx;
   letter-spacing: 4rpx;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255,255,255,0.62);
 }
 
 .activity-name {
-  margin-top: 12rpx;
-  font-size: 44rpx;
+  margin-top: 16rpx;
+  max-width: 540rpx;
+  font-size: 46rpx;
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.36;
+  text-shadow: 0 6rpx 20rpx rgba(0,0,0,0.12);
 }
 
 .activity-slogan {
-  margin-top: 8rpx;
+  margin-top: 12rpx;
   font-size: 26rpx;
-  color: rgba(255, 255, 255, 0.82);
-  letter-spacing: 3rpx;
+  letter-spacing: 4rpx;
+  color: rgba(255,255,255,0.8);
 }
 
 .activity-meta {
-  margin-top: 28rpx;
   display: flex;
   flex-wrap: wrap;
+  margin-top: 36rpx;
 }
 
 .meta-item {
-  margin-right: 16rpx;
-  margin-bottom: 10rpx;
-  padding: 8rpx 18rpx;
-  border-radius: 20rpx;
-  background: rgba(255, 255, 255, 0.14);
-  font-size: 22rpx;
-  color: rgba(255, 255, 255, 0.92);
-}
-
-.content {
-  margin-top: -58rpx;
-  position: relative;
-  z-index: 3;
-}
-
-.progress-card {
-  padding: 28rpx 30rpx;
-}
-
-.progress-top,
-.progress-bottom {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  max-width: 100%;
+  margin-right: 18rpx;
+  margin-bottom: 12rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 24rpx;
+  background: rgba(255,255,255,0.10);
+  border: 1rpx solid rgba(255,255,255,0.12);
+  font-size: 22rpx;
+  color: rgba(255,255,255,0.92);
 }
 
-.progress-label {
-  font-size: 28rpx;
-  font-weight: 600;
+.meta-item text {
+  max-width: 340rpx;
 }
 
-.progress-value {
-  font-size: 24rpx;
-  color: var(--primary-deep);
+.meta-glyph {
+  width: 20rpx;
+  height: 20rpx;
+  margin-right: 10rpx;
+  flex: none;
+  position: relative;
+  border: 2rpx solid #f0d9a4;
+  border-radius: 50%;
 }
 
-.progress-track {
-  height: 14rpx;
-  margin: 20rpx 0 14rpx;
-  border-radius: 10rpx;
-  background: #eef4f4;
+.meta-glyph--time::after {
+  content: "";
+  position: absolute;
+  left: 7rpx;
+  top: 3rpx;
+  width: 2rpx;
+  height: 8rpx;
+  background: #f0d9a4;
+  box-shadow: 5rpx 5rpx 0 #f0d9a4;
+}
+
+.meta-glyph--pin {
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+}
+
+.activity-body {
+  position: relative;
+  z-index: 4;
+  margin-top: -66rpx;
+  padding: 0 32rpx 40rpx;
+}
+
+.passport-card {
+  position: relative;
+  display: flex;
+  min-height: 210rpx;
+  padding: 30rpx;
+  border-radius: 30rpx;
+  background: linear-gradient(125deg, #fffdf7, #ffffff 60%, #f7f1e5);
+  border: 1rpx solid rgba(255,255,255,0.9);
+  box-shadow: 0 26rpx 64rpx rgba(8, 45, 47, 0.15);
   overflow: hidden;
 }
 
-.progress-bar {
-  height: 100%;
-  border-radius: 10rpx;
-  background: linear-gradient(90deg, var(--primary), #55c9b7);
-  transition: width 0.4s ease;
+.passport-card::before {
+  content: "";
+  position: absolute;
+  right: -40rpx;
+  top: -60rpx;
+  width: 220rpx;
+  height: 220rpx;
+  border: 1rpx solid rgba(217,164,65,0.28);
+  border-radius: 50%;
+  box-shadow: 0 0 0 24rpx rgba(217,164,65,0.05);
 }
 
-.progress-bottom {
+.passport-stamp {
+  width: 78rpx;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 26rpx;
+  border-right: 1rpx dashed rgba(18,45,49,0.18);
+  font-family: var(--display-font);
+  font-size: 23rpx;
+  line-height: 1.4;
+  letter-spacing: 4rpx;
+  color: var(--gold-deep);
+  text-align: center;
+}
+
+.passport-main {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.passport-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.passport-percent {
+  font-family: var(--display-font);
+  font-size: 46rpx;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--teal-700);
+}
+
+.passport-title {
+  margin-top: 10rpx;
+  font-size: 29rpx;
+  font-weight: 700;
+}
+
+.passport-track {
+  height: 12rpx;
+  margin-top: 22rpx;
+  border-radius: 10rpx;
+  background: #e9ede8;
+  overflow: hidden;
+}
+
+.passport-fill {
+  height: 100%;
+  border-radius: 10rpx;
+  background: linear-gradient(90deg, var(--teal-800), var(--teal-500), var(--gold));
+  transition: width 0.5s ease;
+}
+
+.passport-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14rpx;
   font-size: 22rpx;
   color: var(--muted);
 }
 
-.progress-percent {
-  color: var(--primary);
-  font-weight: 600;
+.story-sheet {
+  position: relative;
+  padding: 40rpx 32rpx 30rpx;
+  border-left: 4rpx solid var(--gold);
+  border-radius: 0 24rpx 24rpx 0;
+  background: linear-gradient(135deg, #fffdf7, #ffffff);
+  border-top: 1rpx solid var(--line);
+  border-right: 1rpx solid var(--line);
+  border-bottom: 1rpx solid var(--line);
+  box-shadow: var(--shadow-soft);
 }
 
-.text-card {
-  padding: 28rpx 30rpx;
+.story-quote {
+  position: absolute;
+  left: 22rpx;
+  top: 2rpx;
+  font-family: Georgia, serif;
+  font-size: 90rpx;
+  line-height: 1;
+  color: rgba(217,164,65,0.28);
 }
 
 .desc {
+  position: relative;
+  z-index: 2;
   font-size: 27rpx;
-  line-height: 1.9;
-  color: var(--ink-soft);
+  line-height: 1.95;
+  color: var(--ink-2);
   text-align: justify;
 }
 
-.meta-item:last-child {
-  margin-right: 0;
+.story-signature {
+  margin-top: 18rpx;
+  text-align: right;
+  font-family: var(--display-font);
+  font-size: 22rpx;
+  color: var(--gold-deep);
 }
 
-.rule-card {
-  padding: 12rpx 28rpx;
+.rule-timeline {
+  padding: 8rpx 4rpx;
 }
 
 .rule-item {
   display: flex;
-  padding: 22rpx 0;
-  border-bottom: 1rpx solid var(--line);
+  align-items: stretch;
 }
 
-.rule-item:last-child {
-  border-bottom: 0;
+.rule-rail {
+  width: 78rpx;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .rule-index {
-  width: 48rpx;
-  height: 48rpx;
+  width: 54rpx;
+  height: 54rpx;
   flex: none;
-  border-radius: 16rpx;
-  background: var(--primary-soft);
-  color: var(--primary-deep);
-  font-size: 24rpx;
-  font-weight: 700;
+  border-radius: 18rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--teal-100);
+  color: var(--teal-800);
+  font-family: var(--display-font);
+  font-size: 24rpx;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1rpx rgba(13,108,100,0.12);
+}
+
+.rule-line {
+  flex: 1;
+  width: 1rpx;
+  min-height: 46rpx;
+  margin: 6rpx 0;
+  background: repeating-linear-gradient(to bottom, var(--line-strong) 0 8rpx, transparent 8rpx 16rpx);
+  transform-origin: top center;
+  animation: draw-line 0.5s ease both;
 }
 
 .rule-body {
-  margin-left: 20rpx;
+  flex: 1;
+  min-width: 0;
+  padding: 8rpx 0 26rpx 16rpx;
 }
 
 .rule-title {
   font-size: 28rpx;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .rule-desc {
-  margin-top: 6rpx;
-  font-size: 24rpx;
-  line-height: 1.7;
+  margin-top: 8rpx;
+  font-size: 23rpx;
+  line-height: 1.75;
   color: var(--muted);
 }
 
+.spot-list {
+  display: block;
+}
+
 .bottom-cta {
-  margin-top: 36rpx;
+  margin-top: 40rpx;
+}
+
+.cta-arrow {
+  margin-left: 14rpx;
+  font-size: 30rpx;
 }
 
 .bottom-cta--hover {
-  opacity: 0.88;
+  opacity: 0.9;
 }

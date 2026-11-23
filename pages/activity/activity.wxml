@@ -1,48 +1,71 @@
-<view class="page page--plain">
+<view class="page page--plain activity-page">
   <view class="hero activity-hero">
     <navigation-bar title="活动详情" back="{{true}}" color="#ffffff" background="transparent" />
+
+    <view class="activity-watermark display">{{activityMark}}</view>
+    <view class="activity-corner">CITY<br />ARCHIVE</view>
+
     <view class="activity-head">
-      <view class="activity-kicker">FEATURED EVENT</view>
-      <view class="activity-name">{{activity.name || '活动详情'}}</view>
+      <view class="activity-kicker">FEATURED EVENT · {{periodYear}}</view>
+      <view class="activity-name display">{{activity.name || '活动详情'}}</view>
       <view class="activity-slogan">{{activity.slogan}}</view>
+
       <view class="activity-meta">
-        <view class="meta-item">◷ {{activity.period}}</view>
-        <view class="meta-item">⌖ {{activity.location}}</view>
+        <view class="meta-item">
+          <view class="meta-glyph meta-glyph--time"></view>
+          <text class="ellipsis">{{activity.period}}</text>
+        </view>
+        <view class="meta-item">
+          <view class="meta-glyph meta-glyph--pin"></view>
+          <text class="ellipsis">{{activity.location}}</text>
+        </view>
       </view>
     </view>
   </view>
 
-  <view class="content">
-    <view class="card progress-card">
-      <view class="progress-top">
-        <text class="progress-label">我的探索进度</text>
-        <text class="progress-value">{{stats.checked}} / {{stats.total}} 点位</text>
-      </view>
-      <view class="progress-track">
-        <view class="progress-bar" style="width: {{stats.progress}}%"></view>
-      </view>
-      <view class="progress-bottom">
-        <text>已解锁徽章 {{stats.badges}} / {{stats.badgeTotal}}</text>
-        <text class="progress-percent">{{stats.progress}}%</text>
+  <view class="activity-body">
+    <view class="passport-card anim-rise">
+      <view class="passport-stamp">探<br />索<br />记</view>
+      <view class="passport-main">
+        <view class="passport-top">
+          <view class="eyebrow">EXPLORATION PASSPORT</view>
+          <view class="passport-percent">{{stats.progress}}%</view>
+        </view>
+        <view class="passport-title">我的探索进度</view>
+        <view class="passport-track">
+          <view class="passport-fill {{progressClass}}"></view>
+        </view>
+        <view class="passport-meta">
+          <text>{{stats.checked}} / {{stats.total}} 点位</text>
+          <text>徽章 {{stats.badges}} / {{stats.badgeTotal}}</text>
+        </view>
       </view>
     </view>
 
     <view class="section-head">
-      <text class="section-title">活动介绍</text>
+      <text class="section-title">关于这场探索</text>
+      <text class="section-desc">活动介绍</text>
     </view>
-    <view class="card text-card">
+
+    <view class="story-sheet">
+      <view class="story-quote">“</view>
       <view class="desc">{{activity.description || '活动介绍加载中…'}}</view>
+      <view class="story-signature">— {{activity.name || '城市记忆'}}</view>
     </view>
 
     <view class="section-head">
-      <text class="section-title">活动规则</text>
-      <text class="section-desc">参与前请了解</text>
+      <text class="section-title">参与方式</text>
+      <text class="section-desc">{{ruleCount}} 条规则</text>
     </view>
-    <view class="card rule-card">
+
+    <view class="rule-timeline">
       <view class="rule-item" wx:for="{{activity.rules}}" wx:key="title">
-        <view class="rule-index">{{index + 1}}</view>
+        <view class="rule-rail">
+          <view class="rule-index">{{index + 1 < 10 ? '0' + (index + 1) : index + 1}}</view>
+          <view wx:if="{{index < activity.rules.length - 1}}" class="rule-line"></view>
+        </view>
         <view class="rule-body">
-          <view class="rule-title">{{item.title}}</view>
+          <view class="rule-title display">{{item.title}}</view>
           <view class="rule-desc">{{item.desc}}</view>
         </view>
       </view>
@@ -52,10 +75,14 @@
       <text class="section-title">活动点位</text>
       <text class="section-desc">{{stats.checked}} / {{stats.total}} 已打卡</text>
     </view>
-    <spot-card wx:for="{{spots}}" wx:key="id" spot="{{item}}" index="{{index}}" bind:tap="goSpot" />
 
-    <view class="btn-primary bottom-cta" bindtap="goMap" hover-class="bottom-cta--hover">
+    <view class="spot-list">
+      <spot-card wx:for="{{spots}}" wx:key="id" spot="{{item}}" index="{{index}}" bind:tap="goSpot" />
+    </view>
+
+    <view class="btn-primary bottom-cta pressable" bindtap="goMap" hover-class="bottom-cta--hover">
       查看探索地图
+      <text class="cta-arrow">↗</text>
     </view>
   </view>
 </view>

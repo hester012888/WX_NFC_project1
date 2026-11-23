@@ -8,6 +8,7 @@ Page({
     polyline: [],
     center: { latitude: 30.25, longitude: 120.158 },
     stats: { checked: 0, total: 0, progress: 0 },
+    mapMeta: { coord: '', count: 0 },
     loading: true
   },
 
@@ -48,12 +49,17 @@ Page({
           }]
         : []
       const first = spots[0]
+      const stats = (await service.getStats()) || this.data.stats
+      const coord = first
+        ? Number(first.latitude).toFixed(3) + '°N · ' + Number(first.longitude).toFixed(3) + '°E'
+        : ''
       this.setData({
         spots,
         markers,
         polyline,
         center: first ? { latitude: first.latitude - 0.012, longitude: first.longitude - 0.008 } : this.data.center,
-        stats: (await service.getStats()) || this.data.stats,
+        stats,
+        mapMeta: { coord, count: spots.length },
         loading: false
       })
     } catch (err) {

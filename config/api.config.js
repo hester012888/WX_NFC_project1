@@ -8,7 +8,7 @@
  *
  * 注意：页面代码中禁止出现服务器地址、业务数据和 NFC UID。
  */
-const ENV = 'dev'
+const ENV = 'mock'
 
 const BASE_URL = {
   mock: '',

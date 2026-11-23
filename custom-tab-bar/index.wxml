@@ -12,6 +12,7 @@
     >
       <view class="tab-icon icon-{{item.icon}}"></view>
       <text class="tab-text">{{item.text}}</text>
+      <view class="tab-indicator"></view>
     </view>
   </view>
 </view>

@@ -1,6 +1,11 @@
 // pages/badges/badges - 徽章系统：收集进度与徽章详情
 const service = require('../../utils/service')
 
+function progressClass(value) {
+  const rounded = Math.max(0, Math.min(100, Math.round((Number(value) || 0) / 10) * 10))
+  return 'progress-w' + rounded
+}
+
 function formatTime(ts) {
   if (!ts) return ''
   const date = new Date(ts)
@@ -12,6 +17,8 @@ Page({
   data: {
     badges: [],
     unlockedCount: 0,
+    collectionPercent: 0,
+    progressClass: 'progress-w0',
     current: null,
     showDetail: false,
     loading: true
@@ -32,7 +39,14 @@ Page({
         unlockedAt: item.unlockedAt ? formatTime(item.unlockedAt) : ''
       }))
       const unlockedCount = badges.filter((item) => item.unlocked).length
-      this.setData({ badges, unlockedCount, loading: false })
+      const collectionPercent = badges.length ? Math.round((unlockedCount / badges.length) * 100) : 0
+      this.setData({
+        badges,
+        unlockedCount,
+        collectionPercent,
+        progressClass: progressClass(collectionPercent),
+        loading: false
+      })
     } catch (err) {
       this.setData({ loading: false })
       wx.showToast({ title: '徽章加载失败', icon: 'none' })
