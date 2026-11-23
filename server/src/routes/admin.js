@@ -21,6 +21,7 @@ router.get('/admins', adminAuth.requireRole('super_admin'), (req, res, next) => 
 
 router.use('/activities', require('./admin/activities'))
 router.use('/points', require('./admin/points'))
+router.use('/nfc-tags', require('./admin/nfc-tags'))
 
 router.use((req, res) => {
   res.status(501).json({ code: 501, message: '该管理接口将在后续阶段实现' })
