@@ -14,5 +14,6 @@ module.exports = {
   wxAuthMode: process.env.WX_AUTH_MODE || (process.env.NODE_ENV === 'production' ? 'real' : 'mock'),
   sessionTtlMs: Number(process.env.SESSION_TTL_MS) || 7 * DAY,
   guestTtlMs: Number(process.env.GUEST_TTL_MS) || 30 * DAY,
-  nfcAdminToken: process.env.NFC_ADMIN_TOKEN || ''
+  nfcAdminToken: process.env.NFC_ADMIN_TOKEN || '',
+  adminSessionTtlMs: Number(process.env.ADMIN_SESSION_TTL_MS) || 8 * 60 * 60 * 1000
 }

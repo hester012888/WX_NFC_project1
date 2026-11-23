@@ -1,31 +1,26 @@
-// server/src/routes/admin.js - 独立网页管理后台接口预留（挂载于 /api/admin）
-// 第二阶段规划：
-//   GET/POST    /api/admin/activities          活动管理
-//   GET/POST    /api/admin/spots               点位管理
-//   GET/POST    /api/admin/bindings            NFC UID 与点位绑定
-//   GET/POST    /api/admin/media               图片 / 视频 / 音频（阿里云 OSS 签名）
-//   GET         /api/admin/checkins            游客打卡记录
-//   GET/POST    /api/admin/badges              徽章配置
-// 正式实现前需补充管理员鉴权（JWT / Session）与数据库持久化。
-
+// server/src/routes/admin.js - 管理后台统一入口（未来阶段在此挂载资源路由）
 const express = require('express')
+const { getDb } = require('../db')
+const adminAuth = require('../admin-auth')
+const adminAuthRoutes = require('./admin/auth')
+const { publicAdmin } = adminAuth
+
 const router = express.Router()
 
-const reserved = (req, res) => res.status(501).json({
-  code: 501,
-  message: '管理后台接口已预留，将在第二阶段实现'
+router.use('/auth', adminAuthRoutes)
+router.use(adminAuth.adminAuth)
+
+router.get('/admins', adminAuth.requireRole('super_admin'), (req, res, next) => {
+  try {
+    const list = getDb().prepare('SELECT * FROM admins ORDER BY id').all().map(publicAdmin)
+    res.json({ code: 0, message: 'ok', data: list })
+  } catch (err) {
+    next(err)
+  }
 })
 
-router.get('/activities', reserved)
-router.post('/activities', reserved)
-router.get('/spots', reserved)
-router.post('/spots', reserved)
-router.get('/bindings', reserved)
-router.post('/bindings', reserved)
-router.get('/media', reserved)
-router.post('/media', reserved)
-router.get('/checkins', reserved)
-router.get('/badges', reserved)
-router.post('/badges', reserved)
+router.use((req, res) => {
+  res.status(501).json({ code: 501, message: '该管理接口将在后续阶段实现' })
+})
 
 module.exports = router

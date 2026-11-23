@@ -237,5 +237,5 @@ test('原有功能回归：演示 UID、打卡持久化、后台 501', async () 
   assert.equal(health.body.data.status, 'up')
 
   const admin = await request('/admin/activities')
-  assert.equal(admin.status, 501)
+  assert.equal(admin.status, 401)
 })

@@ -323,7 +323,7 @@ test('S4_原有 API、RUK 事件与 UID 管理保护回归', async () => {
   assert.equal(tags.body.code, 0)
 
   const admin = await request('/admin/activities')
-  assert.equal(admin.status, 501)
+  assert.equal(admin.status, 401)
 
   assert.equal(isTrustedAddress('127.0.0.1'), true)
   assert.equal(isTrustedAddress('10.0.0.8'), true)

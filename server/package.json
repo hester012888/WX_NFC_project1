@@ -8,9 +8,11 @@
     "start": "node src/app.js",
     "dev": "node --watch src/app.js",
     "migrate": "node src/migrate.js",
+    "admin:init": "node src/admin-init.js",
     "test": "node --test tests/*.test.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.10.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

@@ -197,6 +197,6 @@ test('原有 API 回归：打卡、UID 解析、RUK 事件与后台 501', async 
   assert.equal(db.prepare('SELECT COUNT(*) AS c FROM devices WHERE device_id=?').get('reader_01').c, 1)
 
   const admin = await request('/admin/activities')
-  assert.equal(admin.status, 501)
-  assert.equal(admin.body.code, 501)
+  assert.equal(admin.status, 401)
+  assert.equal(admin.body.code, 'ADMIN_LOGIN_REQUIRED')
 })

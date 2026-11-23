@@ -218,7 +218,15 @@ function identityMiddleware(req, res, next) {
         throw authError('登录态格式错误', 401, 'LOGIN_EXPIRED')
       }
       const token = authorization.replace(/^Bearer\s+/i, '')
-      const session = requireSession(token, 'login', authError('登录态已失效，请重新登录', 401, 'LOGIN_EXPIRED'))
+      const session = verifySession(token, 'login')
+      if (!session) {
+        // 管理员令牌不属于游客/微信会话，交由 adminAuth 独立校验
+        if (req.path && req.path.startsWith('/api/admin')) {
+          req.identity = { type: 'anonymous', visitorId: 'anonymous', session: null }
+          return next()
+        }
+        throw authError('登录态已失效，请重新登录', 401, 'LOGIN_EXPIRED')
+      }
       req.identity = { type: 'login', visitorId: session.visitor_id, openid: session.openid, session }
     } else if (guestToken) {
       const session = requireSession(String(guestToken), 'guest', authError('游客凭证已失效，请重新获取', 401, 'GUEST_INVALID'))
