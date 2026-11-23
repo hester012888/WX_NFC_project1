@@ -1,4 +1,5 @@
 // server/src/app.js - Express 入口
+const path = require('path')
 const express = require('express')
 const cors = require('cors')
 const config = require('./config')
@@ -15,6 +16,7 @@ function createApp() {
   const app = express()
 
   app.use(cors({ origin: config.corsOrigin }))
+  app.use('/admin', express.static(path.join(__dirname, '..', 'admin'), { index: 'index.html' }))
   app.use(express.json({ limit: '1mb' }))
   app.use(auth.identityMiddleware)
 
@@ -55,6 +57,7 @@ if (require.main === module) {
   initialize()
   createApp().listen(config.port, () => {
     console.log(`NFC tourism API running at http://127.0.0.1:${config.port}/api`)
+    console.log(`Web admin running at http://127.0.0.1:${config.port}/admin/`)
   })
 }
 

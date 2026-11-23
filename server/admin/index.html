@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NFC 文旅管理后台</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="login-view" class="login-view">
+    <div class="login-card">
+      <div class="login-brand">
+        <span class="brand-mark">N</span>
+        <div>
+          <strong>NFC 文旅</strong>
+          <small>Web Admin</small>
+        </div>
+      </div>
+      <h1>管理员登录</h1>
+      <p class="muted">本后台独立于小程序游客身份，仅供运营与超级管理员使用。</p>
+      <form id="login-form" autocomplete="on">
+        <label class="field">
+          <span>用户名</span>
+          <input id="login-username" name="username" type="text" autocomplete="username" placeholder="请输入管理员用户名" required>
+        </label>
+        <label class="field">
+          <span>密码</span>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="请输入管理员密码" required>
+        </label>
+        <div id="login-error" class="form-error" hidden></div>
+        <button class="btn primary block" type="submit">登录管理后台</button>
+      </form>
+      <p class="login-note">登录态有效期 8 小时，关闭浏览器标签后自动失效。</p>
+    </div>
+  </div>
+
+  <div id="app-view" class="app-view" hidden>
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-mark">N</span>
+        <div>
+          <strong>NFC 文旅</strong>
+          <small>管理后台</small>
+        </div>
+      </div>
+      <nav id="nav" class="nav" aria-label="主导航"></nav>
+      <div class="sidebar-footer">v1.0 · 内部管理</div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-title">
+          <h1 id="page-title">总览</h1>
+          <p id="page-subtitle" class="muted"></p>
+        </div>
+        <div class="topbar-actions">
+          <button id="refresh-btn" class="btn ghost" type="button">刷新</button>
+          <div id="admin-badge" class="admin-badge"></div>
+          <button id="logout-btn" class="btn ghost" type="button">退出登录</button>
+        </div>
+      </header>
+      <main id="content" class="content"></main>
+    </div>
+  </div>
+
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
